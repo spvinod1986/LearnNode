@@ -1,0 +1,6 @@
+{
+    "name": "My demo app - production",
+    "dbserver": {
+        "connection": "prod-server"
+    }
+}
