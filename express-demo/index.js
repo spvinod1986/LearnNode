@@ -2,6 +2,8 @@ const startupDebugger = require('debug')('app:startup'); // for debug. The names
 const dbDebugger = require('debug')('app:db'); // for debug messages of database layer
 const config = require('config'); // for coniguration based on environment
 const Joi = require('joi'); // for fluent validation
+const courses = require('./routes/courses'); // for loading our courses api module
+const home = require('./routes/home'); // for loading home web app module
 const express = require('express');
 const app = express();
 
@@ -29,79 +31,8 @@ app.use(function (req, res, next) { // another middleware
 app.use(express.urlencoded({ extended: true })); // middle ware to convert url encoded values to body
 app.use(express.static('public')); // path to serve static files like css, images etc
 
-app.get('/', (req, res) => {
-    res.render('index', { title: "My demo app", message: "App to learn node" }); // to return web pages
-});
-
-const courses = [
-    { id: 1, name: 'Course 1' },
-    { id: 2, name: 'Course 2' },
-    { id: 3, name: 'Course 3' }
-]
-
-app.get('/api/courses', (req, res) => {
-    res.send(courses);
-});
-
-app.get('/api/courses/:id', (req, res) => {
-    const course = courses.find(c => c.id == parseInt(req.params.id));
-
-    if (!course) {
-        return res.status(404).send("The course with given id was not found");
-    }
-    res.send(course);
-});
-
-app.post('/api/courses', (req, res) => {
-    const schema = {
-        name: Joi.string().min(3).required()
-    };
-    const result = Joi.validate(req.body, schema);
-
-    if (result.error) {
-        return res.status(400).send(result.error);
-    }
-
-    const course = {
-        id: courses.length + 1,
-        name: req.body.name
-    }
-    courses.push(course);
-    res.send(course);
-});
-
-app.put('/api/courses/:id', (req, res) => {
-    const course = courses.find(c => c.id == parseInt(req.params.id));
-
-    if (!course) {
-        return res.status(404).send("The course with given id was not found");
-    }
-
-    const schema = {
-        name: Joi.string().min(3).required()
-    };
-    const result = Joi.validate(req.body, schema);
-
-    if (result.error) {
-        return res.status(400).send(result.error);
-    }
-
-    course.name = req.body.name;
-    res.send(course);
-});
-
-app.delete('/api/courses/:id', (req, res) => {
-    const course = courses.find(c => c.id == parseInt(req.params.id));
-
-    if (!course) {
-        return res.status(404).send("The course with given id was not found");
-    }
-
-    const index = courses.indexOf(course);
-    courses.splice(index);
-
-    return course;
-});
+app.use('/api/courses', courses); // setting the path for courses module
+app.use('/', home); // setting the path for home module
 
 app.get('/api/posts/:year/:month', (req, res) => {
     res.send(req.params.year);
