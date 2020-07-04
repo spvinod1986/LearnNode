@@ -35,3 +35,10 @@
 - npm uninstall packagename will uninstall the package.
 - npm, ng are global tools or packages. npm i -g packagename will install the package globally.
 - Publishing a package to npm: Create an account in npm using npm user command. Once done , login using npm login command.npm publish will publish the package. Make sure your package name is unique else the publish will fail. To update a published package, you should make sure to update the version number in package.json. You can also use the command npm version major or minor or patch to update the versions numbers.
+
+## Asynchronous JavaScript
+- Node run time is single threaded. when you call async function, this function will schedule a task to be performed in future. In the future, the task will call the function configured as an argument. It does not wait as well as it does not block. Async does not mean concurrent or multi threaded.
+- Three patterns to deal with async. 1) Callback, 2) Promises and 3) Async/Await.
+- Callback: When you call a async function, you will provide a call back function to be called by async function when it completes its operation. If you have tree of dependent operations then it can lead to Callback Hell or Christmas Tree problem. For example - you need to get username from DB(func 1) to query an API for user repos(func 2)and then call an API with repo details to get commit details(func 3) and so on. This leads to code readability issues. Named function is one solution for that problem.
+- Promise: A promise is an object that holds the eventual result of an asynchronous operation. The promise will be in either of 3 states. When we initially create promise object it will be in "Pending" state during which it kicks of async operation and it moves to "Fulfilled" state if the operation completes successfully. If something went wrong then the promise will be in "Rejected" state.
+- Using async and await, you can write async code that looks like sync code. You can await any function that returns Promise object. await can be used only in an async function. The syntax for async and await is similar to C# programming language.
